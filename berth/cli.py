@@ -48,12 +48,14 @@ def main(context, config_file, verbose, debug, build_only, package_only, keep_co
         if not build.build(configuration):
             context.exit(1)
 
-    if not utils.pull_image(configuration['package'].get('image', 'tenzer/fpm')):
-        context.exit(1)
-
     if build_only:
         utils.info('--build-only provided, skipping packaging.')
+    elif 'package' not in configuration:
+        utils.info('No package configuration provided, skipping package.')
     else:
+        if not utils.pull_image(configuration['package'].get('image', 'tenzer/fpm')):
+            context.exit(1)
+
         if not package.package(configuration):
             context.exit(1)
 

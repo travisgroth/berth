@@ -36,8 +36,11 @@ def verify(config):
     else:
         utils.debug('No "build" section found in configuration.')
 
-    for error in verify_package(config):
-        errors.append(error)
+    if 'package' in config:
+        for error in verify_package(config):
+            errors.append(error)
+    else:
+        utils.debug('No "package" section found in configuration.')
 
     for section in {'build', 'package'}:
         for local_path, container_path in config.get(section, dict()).get('volumes', dict()).items():
